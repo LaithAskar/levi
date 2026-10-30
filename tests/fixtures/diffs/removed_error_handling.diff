@@ -1,0 +1,42 @@
+diff --git a/src/api/client.ts b/src/api/client.ts
+index 3c4d5e6..f7a8b9c 100644
+--- a/src/api/client.ts
++++ b/src/api/client.ts
+@@ -1,16 +1,8 @@
+ export async function fetchUser(id: string) {
+-  try {
+-    const res = await fetch(`/api/users/${id}`);
+-    if (!res.ok) {
+-      throw new Error(`status ${res.status}`);
+-    }
+-    return await res.json();
+-  } catch (err) {
+-    console.error("fetchUser failed", err);
+-    return null;
+-  }
++  const res = await fetch(`/api/users/${id}`);
++  return await res.json();
+ }
+
+ export function prefetch(id: string) {
+-  return fetchUser(id).catch(() => undefined);
++  return fetchUser(id);
+ }
+diff --git a/src/config/loader.py b/src/config/loader.py
+index 2b3c4d5..6e7f8a9 100644
+--- a/src/config/loader.py
++++ b/src/config/loader.py
+@@ -5,11 +5,5 @@ log = logging.getLogger(__name__)
+
+
+ def load_config(path):
+-    try:
+-        with open(path) as handle:
+-            return json.load(handle)
+-    except FileNotFoundError:
+-        log.warning("config %s missing, using defaults", path)
+-        return {}
+-    except json.JSONDecodeError as error:
+-        raise ValueError(f"bad config {path}: {error}") from error
++    with open(path) as handle:
++        return json.load(handle)
